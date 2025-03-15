@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import ProductModal from '../../components/ProductModal';
 import { Modal } from 'bootstrap';
 import DeleteModal from '../../components/DeleteModal';
+import Pagination from '../../components/Pagination';
 
 export interface Product {
   category: string;
@@ -17,14 +18,6 @@ export interface Product {
   num: number;
   imageUrl: string;
   imagesUrl: string[];
-}
-
-interface Pagination {
-  total_pages: number;
-  current_page: number;
-  has_pre: boolean;
-  has_next: boolean;
-  category: string;
 }
 
 function AdminProducts() {
@@ -46,9 +39,9 @@ function AdminProducts() {
     getProducts();
   }, []);
 
-  const getProducts = async () => {
+  const getProducts = async (page = 1) => {
     const productRes = await axios.get(
-      `/v2/api/${import.meta.env.VITE_API_PATH}/admin/products`
+      `/v2/api/${import.meta.env.VITE_API_PATH}/admin/products?page=${page}`
     );
     setProducts(productRes.data.products);
     setPagination(productRes.data.pagination);
@@ -78,7 +71,7 @@ function AdminProducts() {
   const deleteProduct = async (id: string) => {
     try {
       const res = await axios.delete(
-        `/v2/api/${import.meta.env.VITE_API_PATH}/admin/product/${id}`
+        `/v2/api/${import.meta.env.VITE_API_PATH}/admin/product${id}`
       );
       if (res.data.success) {
         closeDeleteProductModal();
@@ -153,29 +146,7 @@ function AdminProducts() {
           })}
         </tbody>
       </table>
-
-      <nav aria-label="Page navigation example">
-        <ul className="pagination">
-          <li className="page-item">
-            <a className="page-link disabled" href="/" aria-label="Previous">
-              <span aria-hidden="true">&laquo;</span>
-            </a>
-          </li>
-          {[...new Array(5)].map((_, i) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <li className="page-item" key={`${i}_page`}>
-              <a className={`page-link ${i + 1 === 1 && 'active'}`} href="/">
-                {i + 1}
-              </a>
-            </li>
-          ))}
-          <li className="page-item">
-            <a className="page-link" href="/" aria-label="Next">
-              <span aria-hidden="true">&raquo;</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
+      <Pagination pagination={pagination} changePage={getProducts} />
     </div>
   );
 }
