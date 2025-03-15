@@ -62,22 +62,16 @@ function ProductModal({
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    let newData: string | number | null = value;
     if (['price', 'origin_price'].includes(name)) {
-      setTempData((prev) => ({
-        ...prev,
-        [name]: Number(value),
-      }));
+      newData = Number(value);
     } else if (name === 'is_enabled') {
-      setTempData((prev) => ({
-        ...prev,
-        [name]: +(e.target as HTMLInputElement).checked,
-      }));
-    } else {
-      setTempData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      newData = +(e.target as HTMLInputElement).checked;
     }
+    setTempData((prev) => ({
+      ...prev,
+      [name]: newData,
+    }));
   };
 
   const uploadFile = async (file: File) => {

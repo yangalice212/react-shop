@@ -92,7 +92,7 @@ function AdminProducts() {
       />
       <DeleteModal
         closeDeleteModal={closeDeleteProductModal}
-        product={tempProduct}
+        title={tempProduct.title}
         handleDelete={deleteProduct}
         id={tempProduct.id}
       />

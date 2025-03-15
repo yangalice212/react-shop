@@ -1,15 +1,13 @@
-import { Product } from '../pages/admin/AdminProducts';
-
 interface DeleteModalProps {
   closeDeleteModal: () => void;
-  product: Product;
+  title: string;
   handleDelete: (id: string) => void;
   id: string;
 }
 
 function DeleteModal({
   closeDeleteModal,
-  product,
+  title,
   handleDelete,
   id,
 }: DeleteModalProps) {
@@ -34,7 +32,7 @@ function DeleteModal({
               onClick={closeDeleteModal}
             />
           </div>
-          <div className="modal-body">刪除品項 {product.title}</div>
+          <div className="modal-body">刪除品項 {title}</div>
           <div className="modal-footer">
             <button
               type="button"
