@@ -1,5 +1,5 @@
 import axios, { AxiosError } from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 interface LoginProps {

@@ -1,12 +1,15 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Product } from '../pages/admin/AdminProducts';
 
 interface ProductModalProps {
   closeProductModal: () => void;
   getProducts: () => void;
+  type: 'create' | 'edit';
+  tempProduct: Product;
 }
 
-interface CreateProductPayload {
+interface ProductPayload {
   title: string;
   category: string;
   origin_price: number;
@@ -15,12 +18,17 @@ interface CreateProductPayload {
   description: string;
   content: string;
   is_enabled: number;
-  imageUrl: string;
+  imageUrl?: string;
   imagesUrl?: string[];
 }
 
-function ProductModal({ closeProductModal, getProducts }: ProductModalProps) {
-  const [tempData, setTempData] = useState<CreateProductPayload>({
+function ProductModal({
+  closeProductModal,
+  getProducts,
+  type,
+  tempProduct,
+}: ProductModalProps) {
+  const [tempData, setTempData] = useState<ProductPayload>({
     title: '',
     category: '',
     origin_price: 0,
@@ -31,6 +39,24 @@ function ProductModal({ closeProductModal, getProducts }: ProductModalProps) {
     is_enabled: 0,
     imageUrl: '',
   });
+
+  useEffect(() => {
+    setTempData(
+      type === 'create'
+        ? {
+            title: '',
+            category: '',
+            origin_price: 200,
+            price: 100,
+            unit: '',
+            description: '',
+            content: '',
+            is_enabled: 1,
+            imageUrl: '',
+          }
+        : tempProduct
+    );
+  }, [type, tempProduct]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -54,14 +80,37 @@ function ProductModal({ closeProductModal, getProducts }: ProductModalProps) {
     }
   };
 
-  const createProduct = async () => {
+  const uploadFile = async (file: File) => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file-to-upload', file);
+
     try {
       const res = await axios.post(
-        `/v2/api/${import.meta.env.VITE_API_PATH}/admin/product`,
-        {
-          data: tempData,
-        }
+        `/v2/api/${import.meta.env.VITE_API_PATH}/admin/upload`,
+        formData
       );
+      if (res.data.success) {
+        setTempData((prev) => ({
+          ...prev,
+          imageUrl: res.data.imageUrl,
+        }));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const submit = async () => {
+    try {
+      const method = type === 'create' ? 'post' : 'put';
+      const api =
+        `/v2/api/${import.meta.env.VITE_API_PATH}/admin/product` +
+        (type === 'edit' ? `/${tempProduct.id}` : '');
+      const res = await axios[method](api, {
+        data: tempData,
+      });
       if (res.data.success) {
         closeProductModal();
         getProducts();
@@ -82,7 +131,7 @@ function ProductModal({ closeProductModal, getProducts }: ProductModalProps) {
         <div className="modal-content">
           <div className="modal-header">
             <h1 className="modal-title fs-5" id="productModalLabel">
-              建立新商品
+              {type === 'create' ? '新增產品' : `編輯 ${tempProduct.title}`}
             </h1>
             <button
               type="button"
@@ -113,6 +162,7 @@ function ProductModal({ closeProductModal, getProducts }: ProductModalProps) {
                       type="file"
                       id="customFile"
                       className="form-control"
+                      onChange={(e) => uploadFile(e.target.files?.[0] as File)}
                     />
                   </label>
                 </div>
@@ -234,7 +284,7 @@ function ProductModal({ closeProductModal, getProducts }: ProductModalProps) {
                         placeholder="請輸入產品說明內容"
                         className="form-check-input"
                         onChange={handleInputChange}
-                        value={tempData.is_enabled}
+                        checked={!!tempData.is_enabled}
                       />
                     </label>
                   </div>
@@ -250,11 +300,7 @@ function ProductModal({ closeProductModal, getProducts }: ProductModalProps) {
             >
               關閉
             </button>
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={createProduct}
-            >
+            <button type="button" className="btn btn-primary" onClick={submit}>
               儲存
             </button>
           </div>
