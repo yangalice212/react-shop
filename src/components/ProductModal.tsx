@@ -1,6 +1,11 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Product } from '../pages/admin/AdminProducts';
+import {
+  handleErrorMessage,
+  handleSuccessMessage,
+  MessageContext,
+} from '../store/messageStore';
 
 interface ProductModalProps {
   closeProductModal: () => void;
@@ -39,6 +44,7 @@ function ProductModal({
     is_enabled: 0,
     imageUrl: '',
   });
+  const [, dispatch] = useContext(MessageContext);
 
   useEffect(() => {
     setTempData(
@@ -90,9 +96,10 @@ function ProductModal({
           ...prev,
           imageUrl: res.data.imageUrl,
         }));
+        handleSuccessMessage(dispatch, { data: { message: '上傳成功' } });
       }
     } catch (error) {
-      console.error(error);
+      handleErrorMessage(dispatch, error);
     }
   };
 
@@ -107,10 +114,11 @@ function ProductModal({
       });
       if (res.data.success) {
         closeProductModal();
+        handleSuccessMessage(dispatch, res);
         getProducts();
       }
     } catch (error) {
-      console.error(error);
+      handleErrorMessage(dispatch, error);
     }
   };
   return (

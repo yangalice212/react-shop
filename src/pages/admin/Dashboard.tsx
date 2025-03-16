@@ -1,8 +1,16 @@
 import axios from 'axios';
-import { useEffect } from 'react';
+import { useEffect, useReducer } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
+import Message from '../../components/Message';
+import {
+  MessageContext,
+  messageReducer,
+  initState,
+} from '../../store/messageStore';
+
 function Dashboard() {
   const navigate = useNavigate();
+  const reducer = useReducer(messageReducer, initState);
 
   const logout = () => {
     document.cookie = 'admin_token=;';
@@ -33,7 +41,8 @@ function Dashboard() {
   }, [navigate, token]);
 
   return (
-    <>
+    <MessageContext.Provider value={reducer}>
+      <Message />
       <nav className="navbar navbar-expand-lg bg-dark">
         <div className="container-fluid">
           <p className="text-white mb-0">後台管理系統</p>
@@ -94,7 +103,7 @@ function Dashboard() {
         </div>
         <div className="w-100">{token && <Outlet />}</div>
       </div>
-    </>
+    </MessageContext.Provider>
   );
 }
 
