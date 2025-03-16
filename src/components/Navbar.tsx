@@ -1,12 +1,12 @@
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 function Navbar() {
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light">
-        <Link className="navbar-brand" to="/">
+        <NavLink className="navbar-brand" to="/">
           Navbar
-        </Link>
+        </NavLink>
         <button
           className="navbar-toggler"
           type="button"
@@ -23,18 +23,18 @@ function Navbar() {
           id="navbarNavAltMarkup"
         >
           <div className="navbar-nav">
-            <Link className="nav-item nav-link me-4 active" to="/">
+            <NavLink className="nav-item nav-link me-4 active" to="/">
               Home <span className="sr-only">(current)</span>
-            </Link>
-            <Link className="nav-item nav-link me-4" to="/products">
+            </NavLink>
+            <NavLink className="nav-item nav-link me-4" to="/products">
               Product
-            </Link>
-            <Link className="nav-item nav-link me-4" to="/detail">
+            </NavLink>
+            <NavLink className="nav-item nav-link me-4" to="/detail">
               Detail
-            </Link>
-            <Link className="nav-item nav-link" to="/cart">
-              <i className="fas fa-shopping-cart"></i>
-            </Link>
+            </NavLink>
+            <NavLink className="nav-item nav-link" to="/cart">
+              <i className="bi bi-bag"></i>
+            </NavLink>
           </div>
         </div>
       </nav>
