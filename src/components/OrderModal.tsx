@@ -1,10 +1,6 @@
 import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
-import {
-  handleErrorMessage,
-  handleSuccessMessage,
-  MessageContext,
-} from '../store/messageStore';
+import { MessageContext } from '../store/messageStore';
 import { Order, OrderPayload } from './types/order';
 
 interface OrderModalProps {
@@ -32,7 +28,8 @@ function OrderModal({
     },
     num: 0,
   });
-  const [, dispatch] = useContext(MessageContext);
+  const { handleSuccessMessage, handleErrorMessage } =
+    useContext(MessageContext);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -64,11 +61,12 @@ function OrderModal({
       );
       if (res.data.success) {
         closeOrderModal();
-        handleSuccessMessage(dispatch, res);
+        handleSuccessMessage(res.data.message);
         getOrders();
       }
-    } catch (error) {
-      handleErrorMessage(dispatch, error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      handleErrorMessage(error?.response?.data?.message || 'Error');
     } finally {
       setIsLoading(false);
     }

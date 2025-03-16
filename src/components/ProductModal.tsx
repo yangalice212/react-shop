@@ -116,7 +116,7 @@ function ProductModal({
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-      handleErrorMessage?.(error?.response?.data?.message ?? 'Error');
+      handleErrorMessage(error?.response?.data?.message ?? 'Error');
     }
   };
   return (
