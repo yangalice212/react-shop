@@ -1,16 +1,28 @@
 import axios from 'axios';
-import { useEffect, useReducer } from 'react';
+import { useEffect, useRef } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
-import Message from '../../components/Message';
-import {
-  MessageContext,
-  messageReducer,
-  initState,
-} from '../../store/messageStore';
+import Message, { MessageRef } from '../../components/Message';
+import { MessageContext } from '../../store/messageStore';
 
 function Dashboard() {
   const navigate = useNavigate();
-  const reducer = useReducer(messageReducer, initState);
+  const msgRef = useRef<MessageRef | null>(null);
+
+  const handleSuccessMessage = (content: string, title: string = '成功') => {
+    msgRef.current?.handleSuccessMessage(content, title);
+  };
+
+  const handleErrorMessage = (
+    content: string | string[],
+    title: string = '失敗'
+  ) => {
+    msgRef.current?.handleErrorMessage(content, title);
+  };
+
+  const contextValue = {
+    handleSuccessMessage,
+    handleErrorMessage,
+  };
 
   const logout = () => {
     document.cookie = 'admin_token=;';
@@ -41,8 +53,8 @@ function Dashboard() {
   }, [navigate, token]);
 
   return (
-    <MessageContext.Provider value={reducer}>
-      <Message />
+    <MessageContext.Provider value={contextValue}>
+      <Message ref={msgRef} />
       <nav className="navbar navbar-expand-lg bg-dark">
         <div className="container-fluid">
           <p className="text-white mb-0">後台管理系統</p>

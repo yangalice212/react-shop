@@ -1,11 +1,7 @@
 import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { Product } from '../pages/admin/AdminProducts';
-import {
-  handleErrorMessage,
-  handleSuccessMessage,
-  MessageContext,
-} from '../store/messageStore';
+import { MessageContext } from '../store/messageStore';
 
 interface ProductModalProps {
   closeProductModal: () => void;
@@ -44,8 +40,8 @@ function ProductModal({
     is_enabled: 0,
     imageUrl: '',
   });
-  const [, dispatch] = useContext(MessageContext);
-
+  const { handleSuccessMessage, handleErrorMessage } =
+    useContext(MessageContext);
   useEffect(() => {
     setTempData(
       type === 'create'
@@ -96,10 +92,11 @@ function ProductModal({
           ...prev,
           imageUrl: res.data.imageUrl,
         }));
-        handleSuccessMessage(dispatch, { data: { message: '上傳成功' } });
+        handleSuccessMessage('上傳成功');
       }
-    } catch (error) {
-      handleErrorMessage(dispatch, error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      handleErrorMessage(error?.response?.data?.message ?? 'Error');
     }
   };
 
@@ -114,11 +111,12 @@ function ProductModal({
       });
       if (res.data.success) {
         closeProductModal();
-        handleSuccessMessage(dispatch, res);
+        handleSuccessMessage(res.data.message);
         getProducts();
       }
-    } catch (error) {
-      handleErrorMessage(dispatch, error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      handleErrorMessage?.(error?.response?.data?.message ?? 'Error');
     }
   };
   return (

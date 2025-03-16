@@ -1,12 +1,60 @@
-import { useContext } from 'react';
-import {
-  handleErrorMessage,
-  MessageContext,
-  type Message,
-} from '../store/messageStore';
+import { forwardRef, useImperativeHandle, useState } from 'react';
+import { type Message as MessageType } from '../store/messageStore';
 
-function Message() {
-  const [message, dispatch] = useContext(MessageContext);
+export interface MessageRef {
+  handleSuccessMessage: (content: string, title?: string) => void;
+  handleErrorMessage: (content: string | string[], title?: string) => void;
+}
+
+const Message = forwardRef((_, ref) => {
+  const initState: MessageType = {
+    type: '',
+    title: '',
+    content: '',
+  };
+  // const { message, handleErrorMessage } = useContext(MessageContext);
+  const [message, setMessage] = useState<MessageType>({
+    type: '',
+    title: '',
+    content: '',
+  });
+
+  const handleSuccessMessage = (content: string, title: string = '成功') => {
+    setMessage({
+      type: 'success',
+      title,
+      content,
+    });
+    setTimeout(() => {
+      setMessage(initState);
+    }, 3000);
+  };
+
+  function handleErrorMessage(
+    content: string | string[],
+    title: string = '失敗'
+  ) {
+    setMessage({
+      type: 'danger',
+
+      title,
+      content: Array.isArray(content) ? content.join('、') : content,
+    });
+    setTimeout(() => {
+      setMessage(initState);
+    }, 3000);
+  }
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      handleSuccessMessage,
+      handleErrorMessage,
+    }),
+    []
+  );
+
+  console.log(message);
 
   return (
     message.content && (
@@ -27,7 +75,7 @@ function Message() {
               className="btn-close"
               data-bs-dismiss="toast"
               aria-label="Close"
-              onClick={() => handleErrorMessage(dispatch, { message: '' })}
+              onClick={() => setMessage(initState)}
             />
           </div>
           <div className="toast-body">{message.content}</div>
@@ -35,6 +83,6 @@ function Message() {
       </div>
     )
   );
-}
+});
 
 export default Message;

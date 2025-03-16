@@ -2,11 +2,7 @@ import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { Coupon } from '../pages/admin/AdminCoupons';
 import { dateFormatter } from '../utils/dateFormatter';
-import {
-  handleErrorMessage,
-  handleSuccessMessage,
-  MessageContext,
-} from '../store/messageStore';
+import { MessageContext } from '../store/messageStore';
 
 interface CouponModalProps {
   closeCouponModal: () => void;
@@ -37,7 +33,8 @@ function CouponModal({
     code: '',
   });
   const [date, setDate] = useState<Date>(new Date());
-  const [, dispatch] = useContext(MessageContext);
+  const { handleSuccessMessage, handleErrorMessage } =
+    useContext(MessageContext);
 
   useEffect(() => {
     setTempData(
@@ -88,11 +85,12 @@ function CouponModal({
       });
       if (res.data.success) {
         closeCouponModal();
-        handleSuccessMessage(dispatch, res);
+        handleSuccessMessage(res.data.message);
         getCoupons();
       }
-    } catch (error) {
-      handleErrorMessage(dispatch, error);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      handleErrorMessage(error?.response?.data?.message ?? 'Error');
     }
   };
   return (
