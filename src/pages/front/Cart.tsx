@@ -1,4 +1,4 @@
-import { useOutletContext } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 import SwiperComponent from '../../components/Swiper';
 import { CartData, CartItem } from '../../components/types/cart';
 import axios from 'axios';
@@ -207,9 +207,9 @@ function Cart() {
                 <p className="mb-0 h4 fw-bold">Total</p>
                 <p className="mb-0 h4 fw-bold">NT$ {cartData.final_total}</p>
               </div>
-              <a href="./checkout.html" className="btn btn-dark w-100 mt-4">
-                前往付款
-              </a>
+              <Link to="/checkout" className="btn btn-dark w-100 mt-4">
+                確認訂單
+              </Link>
             </div>
           </div>
         </div>
