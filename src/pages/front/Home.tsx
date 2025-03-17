@@ -1,6 +1,9 @@
+import { useOutletContext } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
+import { CartData } from '../../components/types/cart';
 
 function Home() {
+  const { cartData } = useOutletContext<{ cartData: CartData }>();
   return (
     <>
       <div className="position-relative">
@@ -20,7 +23,7 @@ function Home() {
           className="container d-flex flex-column"
           style={{ minHeight: '100vh' }}
         >
-          <Navbar />
+          <Navbar cartData={cartData} />
           <div className="row justify-content-center my-auto">
             <div className="col-md-4 text-center">
               <h2>Lorem ipsum.</h2>
