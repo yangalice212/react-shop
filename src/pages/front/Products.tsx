@@ -8,10 +8,11 @@ import Loading from '../../components/Loading';
 function Products() {
   const [products, setProducts] = useState<Product[]>([]);
   const [pagination, setPagination] = useState<Pagination>({} as Pagination);
-  const [category, setCategory] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [category, setCategory] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getProducts = async (page = 1, category?: string) => {
+  const getProducts = async (page = 1, category?: string | null) => {
     try {
       setIsLoading(true);
       const productRes = await axios.get(
@@ -34,7 +35,7 @@ function Products() {
     const categories = [
       ...new Set(productAll.data.products.map(({ category }) => category)),
     ];
-    setCategory(categories);
+    setCategories(categories);
   };
 
   useEffect(() => {
@@ -94,16 +95,22 @@ function Products() {
                       <li>
                         <a
                           className="py-2 d-block text-muted"
-                          onClick={() => getProducts(1)}
+                          onClick={() => {
+                            setCategory(null);
+                            getProducts(1);
+                          }}
                         >
                           All
                         </a>
                       </li>
-                      {category.map((category, i) => (
+                      {categories.map((category, i) => (
                         <li key={i}>
                           <a
                             className="py-2 d-block text-muted"
-                            onClick={() => getProducts(1, category)}
+                            onClick={() => {
+                              setCategory(category);
+                              getProducts(1, category);
+                            }}
                           >
                             {category}
                           </a>
@@ -155,7 +162,10 @@ function Products() {
               })}
             </div>
             <nav className="d-flex justify-content-center">
-              <Pagination pagination={pagination} changePage={getProducts} />
+              <Pagination
+                pagination={pagination}
+                changePage={(page) => getProducts(page, category)}
+              />
             </nav>
           </div>
         </div>
