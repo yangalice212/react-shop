@@ -1,4 +1,5 @@
 import Pagination from '../Pagination';
+import { Product } from './product';
 
 export interface Orders {
   orders: Order[];
@@ -25,9 +26,12 @@ export interface Order extends OrderPayload {
 }
 
 export interface OrderProduct {
+  final_total: number;
   id: string;
+  product: Product;
   product_id: string;
-  qty: string;
+  qty: number;
+  total: number;
 }
 
 export interface OrderUser {

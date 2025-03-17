@@ -42,7 +42,7 @@ function OrderModal({
     const { name, value } = e.target;
     let newData: string | number | boolean | null = value;
     if (['is_paid'].includes(name)) {
-      newData = +(e.target as HTMLInputElement).checked;
+      newData = (e.target as HTMLInputElement).checked ? true : false;
     }
     setTempData((prev) => ({
       ...prev,
@@ -150,10 +150,10 @@ function OrderModal({
                   </tr>
                 </thead>
                 <tbody>
-                  {Object.values(tempOrder.products).map((cart) => (
-                    <tr key={cart.id}>
-                      {/* <td>{cart.product.title}</td> */}
-                      <td>{cart.qty}</td>
+                  {Object.values(tempOrder.products).map((product) => (
+                    <tr key={product.id}>
+                      <td>{product.product.title}</td>
+                      <td>{product.qty}</td>
                     </tr>
                   ))}
                 </tbody>
