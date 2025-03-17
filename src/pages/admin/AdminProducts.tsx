@@ -4,21 +4,7 @@ import ProductModal from '../../components/ProductModal';
 import { Modal } from 'bootstrap';
 import DeleteModal from '../../components/DeleteModal';
 import Pagination from '../../components/Pagination';
-
-export interface Product {
-  category: string;
-  content: string;
-  description: string;
-  id: string;
-  is_enabled: number;
-  origin_price: number;
-  price: number;
-  title: string;
-  unit: string;
-  num: number;
-  imageUrl: string;
-  imagesUrl: string[];
-}
+import { Product } from '../../components/types/product';
 
 function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
