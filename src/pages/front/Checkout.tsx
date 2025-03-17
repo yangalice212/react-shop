@@ -13,7 +13,10 @@ interface FormData {
 }
 
 function Checkout() {
-  const { cartData } = useOutletContext<{ cartData: CartData }>();
+  const { cartData, getCartData } = useOutletContext<{
+    cartData: CartData;
+    getCartData: () => void;
+  }>();
   const navigate = useNavigate();
   const {
     register,
@@ -40,6 +43,7 @@ function Checkout() {
           },
         }
       );
+      getCartData();
       navigate(`/complete/${checkoutRes.data.orderId}`);
     } catch (error) {
       console.error(error);

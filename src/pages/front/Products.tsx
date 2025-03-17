@@ -3,19 +3,28 @@ import Pagination from '../../components/Pagination';
 import axios, { AxiosResponse } from 'axios';
 import { Product } from '../../components/types/product';
 import { Link } from 'react-router-dom';
+import Loading from '../../components/Loading';
 
 function Products() {
   const [products, setProducts] = useState<Product[]>([]);
   const [pagination, setPagination] = useState<Pagination>({} as Pagination);
   const [category, setCategory] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getProducts = async (page = 1, category?: string) => {
-    const productRes = await axios.get(
-      `/v2/api/${import.meta.env.VITE_API_PATH}/products?page=${page}` +
-        (category ? '&category=' + category : '')
-    );
-    setProducts(productRes.data.products);
-    setPagination(productRes.data.pagination);
+    try {
+      setIsLoading(true);
+      const productRes = await axios.get(
+        `/v2/api/${import.meta.env.VITE_API_PATH}/products?page=${page}` +
+          (category ? '&category=' + category : '')
+      );
+      setProducts(productRes.data.products);
+      setPagination(productRes.data.pagination);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getCategory = async () => {
@@ -54,6 +63,8 @@ function Products() {
         <h2 className="fw-bold">Lorem ipsum.</h2>
       </div>
       <div className="container mt-md-5 mt-3 mb-7">
+        <Loading isLoading={isLoading} />
+
         <div className="row">
           <div className="col-md-4">
             <div

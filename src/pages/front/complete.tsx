@@ -54,7 +54,7 @@ function Complete() {
               <div className="card-body px-4 py-0">
                 <ul className="list-group list-group-flush">
                   {Object.values(order?.products || {}).map((product) => (
-                    <li className="list-group-item px-0">
+                    <li className="list-group-item px-0" key={product.id}>
                       <div className="d-flex mt-2">
                         <img
                           src={product.product.imageUrl}
