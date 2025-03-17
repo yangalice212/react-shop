@@ -189,7 +189,7 @@ function OrderModal({
                 <select
                   className="form-select"
                   name="status"
-                  value={tempData.status}
+                  value={tempData.status ?? 0}
                   onChange={handleInputChange}
                   disabled={isLoading}
                 >

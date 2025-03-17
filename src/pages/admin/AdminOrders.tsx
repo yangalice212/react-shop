@@ -99,8 +99,7 @@ function AdminOrders() {
               <tr key={order.id}>
                 <td>{order.id}</td>
                 <td>
-                  {order.user?.name}
-                  {order.user?.email}
+                  {order.user?.name} / {order.user?.email}
                 </td>
                 <td>${order.total}</td>
                 <td>

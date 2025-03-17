@@ -51,16 +51,12 @@ function ProductDetail() {
   const addToCart = async () => {
     try {
       setIsLoading(true);
-      const cartRes = await axios.post(
-        `/v2/api/${import.meta.env.VITE_API_PATH}/cart`,
-        {
-          data: {
-            product_id: product.id,
-            qty: cartQuantity,
-          },
-        }
-      );
-      console.log(cartRes);
+      await axios.post(`/v2/api/${import.meta.env.VITE_API_PATH}/cart`, {
+        data: {
+          product_id: product.id,
+          qty: cartQuantity,
+        },
+      });
       getCartData();
     } catch (error) {
       console.error('Error adding to cart:', error);
@@ -86,8 +82,6 @@ function ProductDetail() {
             pagination={{ clickable: true }} //頁數
             spaceBetween={50}
             slidesPerView={1}
-            onSlideChange={() => console.log('slide change')}
-            onSwiper={(swiper) => console.log(swiper)}
           >
             <SwiperSlide key={id}>
               <div className="carousel-item active" key={id}>
