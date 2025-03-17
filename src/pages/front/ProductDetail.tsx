@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import SwiperComponent from '../../components/Swiper';
+import Loading from '../../components/Loading';
 
 function ProductDetail() {
   const [product, setProduct] = useState<Product>({
@@ -26,15 +27,23 @@ function ProductDetail() {
   const [productSwiper, setProductSwiper] = useState<Product[]>([]);
   const [cartQuantity, setCartQuantity] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isCartLoading, setIsCartLoading] = useState<boolean>(false);
   const { id } = useParams();
   const { getCartData } = useOutletContext<{ getCartData: () => void }>();
 
   const getProduct = async (id: string) => {
-    const productRes = await axios.get(
-      `/v2/api/${import.meta.env.VITE_API_PATH}/product/${id}`
-    );
-    setProduct(productRes.data.product);
-    setCategory(productRes.data.product.category);
+    try {
+      setIsLoading(true);
+      const productRes = await axios.get(
+        `/v2/api/${import.meta.env.VITE_API_PATH}/product/${id}`
+      );
+      setProduct(productRes.data.product);
+      setCategory(productRes.data.product.category);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getProductSwiper = useCallback(async () => {
@@ -50,7 +59,7 @@ function ProductDetail() {
 
   const addToCart = async () => {
     try {
-      setIsLoading(true);
+      setIsCartLoading(true);
       await axios.post(`/v2/api/${import.meta.env.VITE_API_PATH}/cart`, {
         data: {
           product_id: product.id,
@@ -61,7 +70,7 @@ function ProductDetail() {
     } catch (error) {
       console.error('Error adding to cart:', error);
     } finally {
-      setIsLoading(false);
+      setIsCartLoading(false);
     }
   };
 
@@ -74,6 +83,7 @@ function ProductDetail() {
 
   return (
     <div className="container">
+      <Loading isLoading={isLoading} />
       <div className="row align-items-center">
         <div className="col-md-7">
           <Swiper
@@ -173,7 +183,7 @@ function ProductDetail() {
                 type="button"
                 className="text-nowrap btn btn-dark w-100 py-2"
                 onClick={() => addToCart()}
-                disabled={isLoading}
+                disabled={isCartLoading}
               >
                 加入購物車
               </button>
