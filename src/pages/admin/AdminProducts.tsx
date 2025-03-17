@@ -109,7 +109,7 @@ function AdminProducts() {
               <tr key={product.id}>
                 <td>{product.category}</td>
                 <td>{product.title}</td>
-                <td>NT${product.price}</td>
+                <td>NT${product.price.toLocaleString()}</td>
                 <td>{product.is_enabled === 1 ? '啟用' : '未啟用'}</td>
                 <td>
                   <button

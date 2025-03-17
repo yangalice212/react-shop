@@ -139,7 +139,9 @@ function Cart() {
                         </div>
                       </td>
                       <td className="border-0 align-middle">
-                        <p className="mb-0 ms-auto">NT${item.final_total}</p>
+                        <p className="mb-0 ms-auto">
+                          NT${item.final_total.toLocaleString()}
+                        </p>
                       </td>
                       <td className="border-0 align-middle">
                         <button
@@ -187,7 +189,7 @@ function Cart() {
                       Subtotal
                     </th>
                     <td className="text-end border-0 px-0 pt-4">
-                      NT${cartData.total}
+                      NT${cartData.total.toLocaleString()}
                     </td>
                   </tr>
                   <tr>
@@ -205,7 +207,9 @@ function Cart() {
               </table>
               <div className="d-flex justify-content-between mt-4">
                 <p className="mb-0 h4 fw-bold">Total</p>
-                <p className="mb-0 h4 fw-bold">NT$ {cartData.final_total}</p>
+                <p className="mb-0 h4 fw-bold">
+                  NT${cartData.final_total.toLocaleString()}
+                </p>
               </div>
               <Link to="/checkout" className="btn btn-dark w-100 mt-4">
                 確認訂單

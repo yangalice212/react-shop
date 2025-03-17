@@ -78,7 +78,9 @@ function Checkout() {
                   <div className="w-100">
                     <div className="d-flex justify-content-between">
                       <p className="mb-0 fw-bold">{item.product.title}</p>
-                      <p className="mb-0">NT${item.final_total}</p>
+                      <p className="mb-0">
+                        NT${item.final_total.toLocaleString()}
+                      </p>
                     </div>
                     <p className="mb-0 fw-bold">x{item.qty}</p>
                   </div>
@@ -95,7 +97,7 @@ function Checkout() {
                     Subtotal
                   </th>
                   <td className="text-end border-0 px-0 pt-4">
-                    NT$ {cartData.total}
+                    NT${cartData.total.toLocaleString()}
                   </td>
                 </tr>
                 <tr>
@@ -111,7 +113,9 @@ function Checkout() {
             </table>
             <div className="d-flex justify-content-between mt-4">
               <p className="mb-0 h4 fw-bold">Total</p>
-              <p className="mb-0 h4 fw-bold">NT$ {cartData.final_total}</p>
+              <p className="mb-0 h4 fw-bold">
+                NT${cartData.final_total.toLocaleString()}
+              </p>
             </div>
           </div>
         </div>

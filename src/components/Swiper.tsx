@@ -36,9 +36,9 @@ function SwiperComponent({ productSwiper, title }: SwiperProps) {
                     <Link to={`/product/${product.id}`}>{product.title}</Link>
                   </h4>
                   <p className="card-text mb-0">
-                    NT${product.price}{' '}
+                    NT${product.price.toLocaleString()}{' '}
                     <span className="text-muted ">
-                      <del>NT${product.origin_price}</del>
+                      <del>NT${product.origin_price.toLocaleString()}</del>
                     </span>
                   </p>
                   <p className="text-muted mt-3"></p>

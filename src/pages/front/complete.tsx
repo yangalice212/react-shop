@@ -69,9 +69,11 @@ function Complete() {
                           </div>
                           <div className="d-flex justify-content-between mt-auto">
                             <p className="text-muted mb-0">
-                              <small>NT${product.total}</small>
+                              <small>NT${product.total.toLocaleString()}</small>
                             </p>
-                            <p className="mb-0">NT${product.final_total}</p>
+                            <p className="mb-0">
+                              NT${product.final_total.toLocaleString()}
+                            </p>
                           </div>
                         </div>
                       </div>
@@ -88,7 +90,7 @@ function Complete() {
                             Subtotal
                           </th>
                           <td className="text-end border-0 px-0">
-                            NT${order.total}
+                            NT${order.total.toLocaleString()}
                           </td>
                         </tr>
                         <tr>
@@ -106,7 +108,9 @@ function Complete() {
                     </table>
                     <div className="d-flex justify-content-between mt-2">
                       <p className="mb-0 h4 fw-bold">總金額</p>
-                      <p className="mb-0 h4 fw-bold">NT$ {order.total}</p>
+                      <p className="mb-0 h4 fw-bold">
+                        NT${order.total.toLocaleString()}
+                      </p>
                     </div>
                   </li>
                 </ul>

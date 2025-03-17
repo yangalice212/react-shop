@@ -51,7 +51,7 @@ function Navbar({ cartData }: NavbarProps) {
             </NavLink> */}
             <NavLink className="nav-item nav-link position-relative" to="/cart">
               <i className="bi bi-bag"></i>
-              <span className="position-absolute start-100 translate-middle badge rounded-pill bg-danger">
+              <span className="position-absolute start-lg-100 translate-middle badge rounded-pill bg-danger">
                 {cartData?.carts?.length}
               </span>
             </NavLink>
