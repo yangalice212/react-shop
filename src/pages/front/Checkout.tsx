@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { Link, useOutletContext } from 'react-router-dom';
+import { Link, useNavigate, useOutletContext } from 'react-router-dom';
 import { CartData } from '../../components/types/cart';
 import { Input, TextArea } from '../../components/FormElement';
 import axios from 'axios';
@@ -14,6 +14,7 @@ interface FormData {
 
 function Checkout() {
   const { cartData } = useOutletContext<{ cartData: CartData }>();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -24,21 +25,25 @@ function Checkout() {
 
   const onSubmit = async (data: FormData) => {
     const { name, email, tel, address, note } = data;
-    const checkoutRes = await axios.post(
-      `/v2/api/${import.meta.env.VITE_API_PATH}/order`,
-      {
-        data: {
-          user: {
-            name,
-            email,
-            tel,
-            address,
+    try {
+      const checkoutRes = await axios.post(
+        `/v2/api/${import.meta.env.VITE_API_PATH}/order`,
+        {
+          data: {
+            user: {
+              name,
+              email,
+              tel,
+              address,
+            },
+            message: note,
           },
-          message: note,
-        },
-      }
-    );
-    console.log('Checkout Data:', checkoutRes.data);
+        }
+      );
+      navigate(`/complete/${checkoutRes.data.orderId}`);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
