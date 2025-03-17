@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Product } from '../../components/types/product';
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useOutletContext, useParams } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Navigation } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
+import SwiperComponent from '../../components/Swiper';
 
 function ProductDetail() {
   const [product, setProduct] = useState<Product>({
@@ -23,7 +24,10 @@ function ProductDetail() {
   });
   const [category, setCategory] = useState<string>('');
   const [productSwiper, setProductSwiper] = useState<Product[]>([]);
+  const [cartQuantity, setCartQuantity] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { id } = useParams();
+  const { getCartData } = useOutletContext<{ getCartData: () => void }>();
 
   const getProduct = async (id: string) => {
     const productRes = await axios.get(
@@ -43,6 +47,27 @@ function ProductDetail() {
       console.error('Error fetching product swiper:', error);
     }
   }, [category]);
+
+  const addToCart = async () => {
+    try {
+      setIsLoading(true);
+      const cartRes = await axios.post(
+        `/v2/api/${import.meta.env.VITE_API_PATH}/cart`,
+        {
+          data: {
+            product_id: product.id,
+            qty: cartQuantity,
+          },
+        }
+      );
+      console.log(cartRes);
+      getCartData();
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -119,22 +144,28 @@ function ProductDetail() {
                     className="btn btn-outline-dark border-0 py-2"
                     type="button"
                     id="button-addon1"
+                    onClick={() => {
+                      setCartQuantity((pre) => (pre === 1 ? 1 : pre - 1));
+                    }}
                   >
                     <i className="bi bi-dash"></i>
                   </button>
                 </div>
                 <input
-                  type="text"
+                  type="number"
                   className="form-control border-0 text-center my-auto shadow-none bg-light"
                   placeholder=""
                   aria-label="Example text with button addon"
                   aria-describedby="button-addon1"
+                  readOnly
+                  value={cartQuantity}
                 />
                 <div className="input-group-append">
                   <button
                     className="btn btn-outline-dark border-0 py-2"
                     type="button"
                     id="button-addon2"
+                    onClick={() => setCartQuantity((pre) => pre + 1)}
                   >
                     <i className="bi bi-plus"></i>
                   </button>
@@ -142,12 +173,14 @@ function ProductDetail() {
               </div>
             </div>
             <div className="col-6">
-              <a
-                href="./checkout.html"
+              <button
+                type="button"
                 className="text-nowrap btn btn-dark w-100 py-2"
+                onClick={() => addToCart()}
+                disabled={isLoading}
               >
                 加入購物車
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -160,44 +193,10 @@ function ProductDetail() {
           <p className="text-muted">{product.description}</p>
         </div>
       </div>
-      <h3 className="fw-bold">其他 {product.category} 的商品</h3>
-      <Swiper
-        modules={[Pagination, Navigation]}
-        navigation
-        pagination={{ clickable: true }} //頁數
-        spaceBetween={50}
-        slidesPerView={1}
-        onSlideChange={() => console.log('slide change')}
-        onSwiper={(swiper) => console.log(swiper)}
-      >
-        {productSwiper?.map((product) => {
-          return (
-            <SwiperSlide key={product.id}>
-              <div className="card border-0 mb-4 position-relative position-relative">
-                <img
-                  src={product.imageUrl}
-                  className="card-img-top rounded-0 object-cover"
-                  height={400}
-                  alt="..."
-                />
-                <a href="#" className="text-dark"></a>
-                <div className="card-body p-0">
-                  <h4 className="mb-0 mt-3">
-                    <Link to={`/product/${product.id}`}>{product.title}</Link>
-                  </h4>
-                  <p className="card-text mb-0">
-                    NT${product.price}{' '}
-                    <span className="text-muted ">
-                      <del>NT${product.origin_price}</del>
-                    </span>
-                  </p>
-                  <p className="text-muted mt-3"></p>
-                </div>
-              </div>
-            </SwiperSlide>
-          );
-        })}
-      </Swiper>
+      <SwiperComponent
+        productSwiper={productSwiper?.filter((item) => item.id !== product.id)}
+        title={`其他 ${product.category} 的商品`}
+      />
     </div>
   );
 }

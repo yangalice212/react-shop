@@ -1,6 +1,11 @@
 import { NavLink, useLocation } from 'react-router-dom';
+import { CartData } from './types/cart';
 
-function Navbar() {
+interface NavbarProps {
+  cartData: CartData;
+}
+
+function Navbar({ cartData }: NavbarProps) {
   const location = useLocation();
 
   const active = (current?: string) => {
@@ -44,8 +49,11 @@ function Navbar() {
             >
               Detail
             </NavLink> */}
-            <NavLink className="nav-item nav-link" to="/cart">
+            <NavLink className="nav-item nav-link position-relative" to="/cart">
               <i className="bi bi-bag"></i>
+              <span className="position-absolute start-100 translate-middle badge rounded-pill bg-danger">
+                {cartData?.carts?.length}
+              </span>
             </NavLink>
           </div>
         </div>
