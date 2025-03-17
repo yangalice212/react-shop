@@ -38,12 +38,12 @@ function Navbar() {
             >
               Product
             </NavLink>
-            <NavLink
+            {/* <NavLink
               className={`nav-item nav-link me-4 ${active()}`}
               to="/detail"
             >
               Detail
-            </NavLink>
+            </NavLink> */}
             <NavLink className="nav-item nav-link" to="/cart">
               <i className="bi bi-bag"></i>
             </NavLink>
