@@ -1,6 +1,12 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 
 function Navbar() {
+  const location = useLocation();
+
+  const active = (current?: string) => {
+    return location.pathname === `/${current}` ? 'active' : '';
+  };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light">
@@ -23,13 +29,19 @@ function Navbar() {
           id="navbarNavAltMarkup"
         >
           <div className="navbar-nav">
-            <NavLink className="nav-item nav-link me-4 active" to="/">
-              Home <span className="sr-only">(current)</span>
+            <NavLink className={`nav-item nav-link me-4 ${active()}`} to="/">
+              Home
             </NavLink>
-            <NavLink className="nav-item nav-link me-4" to="/products">
+            <NavLink
+              className={`nav-item nav-link me-4 ${active('products')}`}
+              to="/products"
+            >
               Product
             </NavLink>
-            <NavLink className="nav-item nav-link me-4" to="/detail">
+            <NavLink
+              className={`nav-item nav-link me-4 ${active()}`}
+              to="/detail"
+            >
               Detail
             </NavLink>
             <NavLink className="nav-item nav-link" to="/cart">

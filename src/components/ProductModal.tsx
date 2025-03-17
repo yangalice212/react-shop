@@ -152,6 +152,8 @@ function ProductModal({
                       id="image"
                       placeholder="請輸入圖片連結"
                       className="form-control"
+                      onChange={handleInputChange}
+                      value={tempData.imageUrl}
                     />
                   </label>
                 </div>
