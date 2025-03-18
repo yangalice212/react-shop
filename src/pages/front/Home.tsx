@@ -94,6 +94,7 @@ function Home() {
           .map((product, id) => {
             return (
               <div
+                key={id}
                 className={`row ${
                   id === 1
                     ? 'flex-row-reverse justify-content-between mt-4'

@@ -57,7 +57,7 @@ function AdminProducts() {
   const deleteProduct = async (id: string) => {
     try {
       const res = await axios.delete(
-        `/v2/api/${import.meta.env.VITE_API_PATH}/admin/product${id}`
+        `/v2/api/${import.meta.env.VITE_API_PATH}/admin/product/${id}`
       );
       if (res.data.success) {
         closeDeleteProductModal();

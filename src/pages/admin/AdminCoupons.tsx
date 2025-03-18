@@ -67,7 +67,7 @@ function AdminCoupons() {
   const deleteCoupon = async (id: string) => {
     try {
       const res = await axios.delete(
-        `/v2/api/${import.meta.env.VITE_API_PATH}/admin/coupon${id}`
+        `/v2/api/${import.meta.env.VITE_API_PATH}/admin/coupon/${id}`
       );
       if (res.data.success) {
         closeDeleteModal();
