@@ -16,7 +16,7 @@ function Navbar({ cartData }: NavbarProps) {
     <>
       <nav className="navbar navbar-expand-lg navbar-light">
         <NavLink className="navbar-brand" to="/">
-          Navbar
+          FUrniTURE
         </NavLink>
         <button
           className="navbar-toggler"

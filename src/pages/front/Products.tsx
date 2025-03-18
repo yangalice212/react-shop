@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Pagination from '../../components/Pagination';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { Product } from '../../components/types/product';
-import { Link } from 'react-router-dom';
+import { Link, useOutletContext } from 'react-router-dom';
 import Loading from '../../components/Loading';
 
 function Products() {
@@ -11,6 +11,9 @@ function Products() {
   const [categories, setCategories] = useState<string[]>([]);
   const [category, setCategory] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { productAll } = useOutletContext<{
+    productAll: Product[];
+  }>();
 
   const getProducts = async (page = 1, category?: string | null) => {
     try {
@@ -28,18 +31,16 @@ function Products() {
     }
   };
 
-  const getCategory = async () => {
-    const productAll: AxiosResponse<{ products: Product[] }> = await axios.get(
-      `/v2/api/${import.meta.env.VITE_API_PATH}/products/all`
-    );
-    const categories = [
-      ...new Set(productAll.data.products.map(({ category }) => category)),
-    ];
+  const getCategory = useCallback(() => {
+    const categories = [...new Set(productAll.map(({ category }) => category))];
     setCategories(categories);
-  };
+  }, [productAll]);
 
   useEffect(() => {
     getCategory();
+  }, [productAll, getCategory]);
+
+  useEffect(() => {
     getProducts();
   }, []);
 
@@ -56,12 +57,12 @@ function Products() {
             bottom: 0,
             left: 0,
             right: 0,
-            backgroundImage: `url(https://images.unsplash.com/photo-1480399129128-2066acb5009e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80)`,
-            backgroundPosition: 'center center',
+            backgroundImage: `url(https://images.pexels.com/photos/269252/pexels-photo-269252.jpeg?auto=compress&cs=tinysrgb&w=1260&h=650&dpr=2)`,
+            backgroundPosition: 'bottom center',
             opacity: 0.1,
           }}
         ></div>
-        <h2 className="fw-bold">Lorem ipsum.</h2>
+        <h2 className="fw-bold">FUrniTURE</h2>
       </div>
       <div className="container mt-md-5 mt-3 mb-7">
         <Loading isLoading={isLoading} />
@@ -134,12 +135,12 @@ function Products() {
                         height={200}
                         alt="..."
                       />
-                      <a href="#" className="text-dark">
+                      {/* <a href="#" className="text-dark">
                         <i
                           className="bi bi-heart position-absolute"
                           style={{ right: '16px', top: '16px' }}
                         ></i>
-                      </a>
+                      </a> */}
                       <div className="card-body p-0">
                         <h4 className="mb-0 mt-3">
                           <Link className="link" to={`/product/${product.id}`}>

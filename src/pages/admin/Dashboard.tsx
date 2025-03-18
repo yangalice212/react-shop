@@ -63,6 +63,7 @@ function Dashboard() {
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarNav"
+            data-bs-theme="dark"
             aria-controls="navbarNav"
             aria-expanded="false"
             aria-label="Toggle navigation"
@@ -94,21 +95,21 @@ function Dashboard() {
               className="list-group-item list-group-item-action py-3"
               to="/admin/products"
             >
-              <i className="bi bi-cup-fill me-2" />
+              <i className="bi bi-box me-2" />
               產品列表
             </Link>
             <Link
               className="list-group-item list-group-item-action py-3"
               to="/admin/coupons"
             >
-              <i className="bi bi-cup-fill me-2" />
+              <i className="bi bi-ticket-perforated me-2" />
               優惠卷列表
             </Link>
             <Link
               className="list-group-item list-group-item-action py-3"
               to="/admin/orders"
             >
-              <i className="bi bi-cup-fill me-2" />
+              <i className="bi bi-clipboard me-2" />
               訂單列表
             </Link>
           </ul>

@@ -1,9 +1,10 @@
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { CartData } from '../../components/types/cart';
+import { Product } from '../../components/types/product';
 
 function FrontLayout() {
   const location = useLocation();
@@ -13,6 +14,7 @@ function FrontLayout() {
     total: 0,
     final_total: 0,
   });
+  const [productAll, setProductAll] = useState<Product[]>([]);
 
   const getCartData = async () => {
     try {
@@ -21,16 +23,24 @@ function FrontLayout() {
       );
       setCartData(cartRes.data.data);
     } catch (error) {
-      console.error('Error fetching cart data:', error);
+      console.error("Error fetching cart data:", error);
     }
+  };
+
+  const getProducts = async () => {
+    const productAll: AxiosResponse<{ products: Product[] }> = await axios.get(
+      `/v2/api/${import.meta.env.VITE_API_PATH}/products/all`
+    );
+    setProductAll(productAll.data.products);
   };
 
   useEffect(() => {
     getCartData();
+    getProducts();
   }, []);
 
   useEffect(() => {
-    setNavbar(location.pathname !== '/');
+    setNavbar(location.pathname !== "/");
   }, [location]);
 
   return (
@@ -40,11 +50,11 @@ function FrontLayout() {
           <Navbar cartData={cartData} />
         </div>
       )}
-      <Outlet context={{ getCartData, cartData }} />
+      <Outlet context={{ getCartData, cartData, productAll }} />
       <div className="bg-light py-4">
         <div className="container">
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center align-items-start">
-            <p className="mb-0 fw-bold">Lorem ipsum dolor sit amet.</p>
+            <p className="mb-0 fw-bold col-md-2">追蹤最新資訊</p>
             <div className="input-group w-md-50 mt-md-0 mt-3">
               <input
                 type="text"
@@ -57,7 +67,7 @@ function FrontLayout() {
                   type="button"
                   id="search"
                 >
-                  Lorem ipsum
+                  訂閱
                 </button>
               </div>
             </div>
@@ -67,9 +77,9 @@ function FrontLayout() {
       <div className="bg-dark py-5">
         <div className="container">
           <div className="d-flex align-items-center justify-content-between text-white mb-md-7 mb-4">
-            <a className="text-white h4" href="./index.html">
-              LOGO
-            </a>
+            <Link className="text-white h4" to="/">
+              FUrniTURE
+            </Link>
             <ul className="d-flex list-unstyled mb-0 h4">
               <li>
                 <a href="#" className="text-white mx-3">
@@ -91,9 +101,9 @@ function FrontLayout() {
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-end align-items-start text-white">
             <div className="mb-md-0 mb-1">
               <p className="mb-0">02-3456-7890</p>
-              <p className="mb-0">service@mail.com</p>
+              <p className="mb-0">future_furnitre@mail.com</p>
             </div>
-            <p className="mb-0">© 2020 LOGO All Rights Reserved.</p>
+            <p className="mb-0">© 2025 LOGO All Rights Reserved.</p>
           </div>
         </div>
       </div>

@@ -1,19 +1,19 @@
 import { Link, useOutletContext } from 'react-router-dom';
 import SwiperComponent from '../../components/Swiper';
 import { CartData, CartItem } from '../../components/types/cart';
-import axios, { AxiosResponse } from 'axios';
-import { SetStateAction, useEffect, useState } from 'react';
+import axios from 'axios';
+import { SetStateAction, useState } from 'react';
 import { Product } from '../../components/types/product';
 
 function Cart() {
-  const { cartData, getCartData } = useOutletContext<{
+  const { cartData, getCartData, productAll } = useOutletContext<{
     cartData: CartData;
     getCartData: () => void;
+    productAll: Product[];
   }>();
   const [loadingItems, setLoadingItems] = useState<SetStateAction<string>[]>(
     []
   );
-  const [products, setProducts] = useState<Product[]>([]);
 
   const removeItem = async (id: string) => {
     try {
@@ -57,19 +57,6 @@ function Cart() {
       );
     }
   };
-
-  const getProducts = async () => {
-    const productAll: AxiosResponse<{ products: Product[] }> = await axios.get(
-      `/v2/api/${import.meta.env.VITE_API_PATH}/products/all`
-    );
-    setProducts(
-      productAll.data.products.sort(() => 0.5 - Math.random()).slice(0, 5)
-    );
-  };
-
-  useEffect(() => {
-    getProducts();
-  }, []);
 
   return (
     <div className="container">
@@ -246,7 +233,12 @@ function Cart() {
           </div>
         )}
         <div className="my-5">
-          <SwiperComponent productSwiper={products} title={'瀏覽更多商品'} />
+          <SwiperComponent
+            productSwiper={productAll
+              .sort(() => 0.5 - Math.random())
+              .slice(0, 5)}
+            title={'瀏覽更多商品'}
+          />
         </div>
       </div>
     </div>
