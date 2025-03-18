@@ -2,10 +2,13 @@ import { Link, useOutletContext } from 'react-router-dom';
 import SwiperComponent from '../../components/Swiper';
 import { CartData, CartItem } from '../../components/types/cart';
 import axios from 'axios';
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useMemo, useState } from 'react';
 import { Product } from '../../components/types/product';
+import { useDispatch } from 'react-redux';
+import { createAsyncMessage } from '../../slice/messageSlice';
 
 function Cart() {
+  const dispatch = useDispatch();
   const { cartData, getCartData, productAll } = useOutletContext<{
     cartData: CartData;
     getCartData: () => void;
@@ -38,7 +41,7 @@ function Cart() {
       });
       const updatedItem = updatedCarts.find((item) => item.id === cartItem.id);
       if (updatedItem) {
-        await axios.put(
+        const cartRes = await axios.put(
           `/v2/api/${import.meta.env.VITE_API_PATH}/cart/${cartItem.id}`,
           {
             data: {
@@ -48,15 +51,25 @@ function Cart() {
           }
         );
         getCartData();
+        dispatch(createAsyncMessage(cartRes.data));
       }
     } catch (error) {
-      console.error('Error updating item:', error);
+      dispatch(createAsyncMessage(error.response.data));
     } finally {
       setLoadingItems(
         loadingItems.filter((loadingObject) => loadingObject !== cartItem.id)
       );
     }
   };
+
+  const swiper = useMemo(() => {
+    return (
+      <SwiperComponent
+        productSwiper={productAll.sort(() => 0.5 - Math.random()).slice(0, 5)}
+        title={'瀏覽更多商品'}
+      />
+    );
+  }, [productAll]);
 
   return (
     <div className="container">
@@ -232,14 +245,7 @@ function Cart() {
             </Link>
           </div>
         )}
-        <div className="my-5">
-          <SwiperComponent
-            productSwiper={productAll
-              .sort(() => 0.5 - Math.random())
-              .slice(0, 5)}
-            title={'瀏覽更多商品'}
-          />
-        </div>
+        <div className="my-5">{swiper}</div>
       </div>
     </div>
   );

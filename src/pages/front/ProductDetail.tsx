@@ -7,6 +7,8 @@ import { Pagination, Navigation } from 'swiper/modules';
 import 'swiper/swiper-bundle.css';
 import SwiperComponent from '../../components/Swiper';
 import Loading from '../../components/Loading';
+import { useDispatch } from 'react-redux';
+import { createAsyncMessage } from '../../slice/messageSlice';
 
 function ProductDetail() {
   const [product, setProduct] = useState<Product>({
@@ -29,6 +31,7 @@ function ProductDetail() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isCartLoading, setIsCartLoading] = useState<boolean>(false);
   const { id } = useParams();
+  const dispatch = useDispatch();
   const { getCartData } = useOutletContext<{ getCartData: () => void }>();
 
   const getProduct = async (id: string) => {
@@ -60,15 +63,20 @@ function ProductDetail() {
   const addToCart = async () => {
     try {
       setIsCartLoading(true);
-      await axios.post(`/v2/api/${import.meta.env.VITE_API_PATH}/cart`, {
-        data: {
-          product_id: product.id,
-          qty: cartQuantity,
-        },
-      });
+      const cartRes = await axios.post(
+        `/v2/api/${import.meta.env.VITE_API_PATH}/cart`,
+        {
+          data: {
+            product_id: product.id,
+            qty: cartQuantity,
+          },
+        }
+      );
       getCartData();
+      const { message, success } = cartRes.data;
+      dispatch(createAsyncMessage({ message, success }));
     } catch (error) {
-      console.error('Error adding to cart:', error);
+      dispatch(createAsyncMessage(error.response.data));
     } finally {
       setIsCartLoading(false);
     }

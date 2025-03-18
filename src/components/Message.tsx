@@ -36,7 +36,6 @@ const Message = forwardRef((_, ref) => {
   ) {
     setMessage({
       type: 'danger',
-
       title,
       content: Array.isArray(content) ? content.join('、') : content,
     });

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { CartData } from '../../components/types/cart';
 import { Product } from '../../components/types/product';
+import MessageToast from '../../components/MessageToast';
 
 function FrontLayout() {
   const location = useLocation();
@@ -23,7 +24,7 @@ function FrontLayout() {
       );
       setCartData(cartRes.data.data);
     } catch (error) {
-      console.error("Error fetching cart data:", error);
+      console.error('Error fetching cart data:', error);
     }
   };
 
@@ -40,7 +41,7 @@ function FrontLayout() {
   }, []);
 
   useEffect(() => {
-    setNavbar(location.pathname !== "/");
+    setNavbar(location.pathname !== '/');
   }, [location]);
 
   return (
@@ -50,6 +51,7 @@ function FrontLayout() {
           <Navbar cartData={cartData} />
         </div>
       )}
+      <MessageToast />
       <Outlet context={{ getCartData, cartData, productAll }} />
       <div className="bg-light py-4">
         <div className="container">
