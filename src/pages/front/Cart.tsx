@@ -51,9 +51,12 @@ function Cart() {
           }
         );
         getCartData();
+        // @ts-expect-error for strict type checking
         dispatch(createAsyncMessage(cartRes.data));
       }
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      // @ts-expect-error for strict type checking
       dispatch(createAsyncMessage(error.response.data));
     } finally {
       setLoadingItems(

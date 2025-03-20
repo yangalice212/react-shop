@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
-import { Product } from '../pages/admin/AdminProducts';
 import { MessageContext } from '../store/messageStore';
+import { Product } from './types/product';
 
 interface ProductModalProps {
   closeProductModal: () => void;
