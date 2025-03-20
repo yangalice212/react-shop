@@ -145,10 +145,10 @@ function ProductDetail() {
           </nav>
           <h2 className="fw-bold h1 mb-1">{product.title}</h2>
           <p className="mb-0 text-muted text-end">
-            <del>NT$${product.origin_price.toLocaleString()}</del>
+            <del>NT${product.origin_price.toLocaleString()}</del>
           </p>
           <p className="h4 fw-bold text-end">
-            NT$${product.price.toLocaleString()}
+            NT${product.price.toLocaleString()}
           </p>
           <div className="row align-items-center">
             <div className="col-6">

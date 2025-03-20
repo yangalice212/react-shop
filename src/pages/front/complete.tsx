@@ -5,8 +5,7 @@ import { Order } from '../../components/types/order';
 
 function Complete() {
   const { id } = useParams<{ id: string }>();
-  const [order, setOrder] = useState<Order>({} as Order);
-
+  const [order, setOrder] = useState<Order | null>();
   const getOrder = async (id: string) => {
     try {
       const orderRes = await axios.get(
@@ -37,11 +36,7 @@ function Complete() {
         <div className="row">
           <div className="col-md-6">
             <h2>Checkout Success</h2>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore
-              ullam odit, illo sed delectus cum. Assumenda, illo pariatur!
-              Tenetur, est!
-            </p>
+            <p>感謝您的訂購，歡迎再次光臨</p>
             <Link to="/" className="btn btn-outline-dark me-2 rounded-0 mb-4">
               Back To Home
             </Link>
@@ -90,7 +85,7 @@ function Complete() {
                             Subtotal
                           </th>
                           <td className="text-end border-0 px-0">
-                            NT${order.total.toLocaleString()}
+                            NT${order?.total.toLocaleString()}
                           </td>
                         </tr>
                         <tr>
@@ -109,7 +104,7 @@ function Complete() {
                     <div className="d-flex justify-content-between mt-2">
                       <p className="mb-0 h4 fw-bold">總金額</p>
                       <p className="mb-0 h4 fw-bold">
-                        NT${order.total.toLocaleString()}
+                        NT${order?.total.toLocaleString()}
                       </p>
                     </div>
                   </li>
